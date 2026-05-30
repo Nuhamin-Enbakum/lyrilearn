@@ -3,12 +3,17 @@ const cors = require('cors')
 require('dotenv').config()
 const pool = require('./db')
 const authRoutes = require('./routes/auth')
+const verifyToken = require('./middleware/auth')
+console.log(verifyToken)
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 app.use('/auth', authRoutes)
+app.get('/protected', verifyToken, (req, res) => {
+  res.json({message: `Hello ${req.user.email}, you are logged in!`})
+})
 
 app.get('/', async (req, res) => {
   try {
